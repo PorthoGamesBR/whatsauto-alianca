@@ -6,10 +6,13 @@ app = Flask(__name__)
 def whats_test():   
     #This code, somehow, populate the message. Dont know why it works that way, but it does
     print(request.get_data().decode('utf-8'))
-    request_dict = request.form.to_dict(flat = False)
-    print(request_dict)
-    
+    #The message comes in this format:
     #app=WhatsAuto&sender=WhatsAuto+app&message=Mensagem+de+teste&
+    
+    #And this one gets an ImmutableDict and prints the message from it
+    print(request.form['message'])
+    
+
     
     #message = request_data['message']
     #print(message)
