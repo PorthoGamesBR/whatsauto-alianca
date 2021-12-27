@@ -1,9 +1,13 @@
 from flask import Flask, request
 
-app = Flask.init(__name__)
+app = Flask(__name__)
 
-@app.route("/whats")
+@app.route("/whats", methods=['POST'])
 def whats_test():
+    request_data = request.get_json()
+    
+    message = request_data['message']
+    print(message)
     return "Hello Whatsauto"
 
 
