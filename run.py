@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
@@ -12,12 +12,8 @@ def whats_test():
     #And this one gets an ImmutableDict and prints the message from it
     print(request.form['message'])
     
-
-    
-    #message = request_data['message']
-    #print(message)
-    return "Hello Whatsauto"
-
+    awnser = {'reply': 'Hello Whatsauto'}
+    return awnser
 
 
 if __name__ == "__main__":
