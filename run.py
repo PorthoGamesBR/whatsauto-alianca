@@ -3,12 +3,13 @@ from flask import Flask, request
 app = Flask(__name__)
 
 @app.route("/whats", methods=['GET','POST'])
-def whats_test():
-    #request_data = request.get_json()
-    #request.data.decode('utf-8')
-    
+def whats_test():   
+    #This code, somehow, populate the message. Dont know why it works that way, but it does
     print(request.get_data().decode('utf-8'))
-    print(request.data.decode('utf-8'))
+    request_dict = request.form.to_dict(flat = False)
+    print(request_dict)
+    
+    #app=WhatsAuto&sender=WhatsAuto+app&message=Mensagem+de+teste&
     
     #message = request_data['message']
     #print(message)
