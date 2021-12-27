@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -12,6 +12,7 @@ def whats_test():
     #And this one gets an ImmutableDict and prints the message from it
     print(request.form['message'])
     
+    #Flask convert dicts automaticaly as Json objects when returning
     awnser = {'reply': 'Hello Whatsauto'}
     return awnser
 
