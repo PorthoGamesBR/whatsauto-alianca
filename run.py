@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/whats", methods=['GET','POST'])
 def whats_test():   
-    #This code, somehow, populate the message. Dont know why it works that way, but it does
+    #This code, somehow, populate the message. Its a thing with flask
     print(request.get_data().decode('utf-8'))
     #The message comes in this format:
     #app=WhatsAuto&sender=WhatsAuto+app&message=Mensagem+de+teste&
