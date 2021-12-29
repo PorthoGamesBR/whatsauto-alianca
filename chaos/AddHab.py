@@ -5,12 +5,12 @@ def file_name(name):
     return name + ".csv"
 
 def init_file(filename):
-     with open(filename, "a") as file:
+     with open("chaos/" + filename, "a") as file:
         writer = csv.writer(file)
         writer.writerow(["Carimbo de Data/Hora","Nome","Descrição"])
         
 def add_hab(filename, nome, descricao):
-    with open(filename, "a") as file:
+    with open("chaos/" + filename, "a") as file:
         writer = csv.writer(file)
         now = datetime.now()
         date_string = now.strftime('%d/%m/%y %H:%M:%S')  

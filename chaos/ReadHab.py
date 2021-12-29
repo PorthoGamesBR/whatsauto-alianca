@@ -1,17 +1,14 @@
 import csv, random
 
 def get_keyset(filename):
-   with open(filename, "w") as file:
+   with open("chaos/" + filename, "r") as file:
         reader = csv.DictReader(file)
         
         return reader.fieldnames
      
-        #keyset = next(reader)
-        #return str(keyset).split(',')
-     
 def get_hab_dict(filename):
      dict_from_csv = {}
-     with open(filename, "r") as file:
+     with open("chaos/" + filename, "r") as file:
         reader = csv.DictReader(file)
         nome_key = get_nome_key(filename)
         desc_key = get_desc_key(filename)
@@ -24,7 +21,7 @@ def get_hab_desc(filename,hab_name):
    desc = "empty"
    name_key = get_nome_key(filename)
    desc_key = get_desc_key(filename)
-   with open(filename, "r") as file:
+   with open("chaos/" + filename, "r") as file:
       reader = csv.DictReader(file)
       for row in reader:
          if row[name_key].lower() == hab_name.lower():
@@ -32,7 +29,7 @@ def get_hab_desc(filename,hab_name):
    return desc
       
 def get_hab(filename):
-    with open(filename, "r") as file:
+    with open("chaos/" + filename, "r") as file:
         reader = csv.reader(file)
         next(reader)
         rows = list(reader)

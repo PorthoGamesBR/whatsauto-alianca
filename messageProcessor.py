@@ -16,6 +16,7 @@ def main():
  !addgs (numero do pp) (GS), !addxp (numero do pp) (xp)
  !chaos_hab, !dice (numero de dados + d + tipo), !chaos_effect,
  !setpp (numero do pp) (lvl ou level,gold,xp) (quantia) 
+ !newpp (nome do pp)
             """)
         elif message.lower()[0] == 'e':
             exit()
@@ -38,6 +39,7 @@ def process_message(message):
     # !addgs (numero do pp) (GS), !addxp (numero do pp) (xp)
     # !chaos_hab, !dice (numero de dados + d + tipo), !chaos_effect,
     # !setpp (numero do pp) (lvl ou level,gold,xp) (quantia)
+    # !newpp (nome do pp)
     
     mes = message.strip('!')
     mes_ls = mes.split(' ')

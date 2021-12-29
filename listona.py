@@ -310,7 +310,3 @@ def add_xp_pp(pp_id, value):
         print(e)
     return pp  
     
-    
-#print(add_gold_pp("portho","luiza123",57,3000))
-#get_personagem_by_id("portho","luiza123",57)            
-#change_pp_listona("portho","luiza123",57,"xp",10000)
