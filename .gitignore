@@ -1,9 +1,13 @@
 *.pem
 
 venv
+Devtools
 
 *.connectiondata
 *.vscode
+*.gcloudignore
 
 /Dockerfile
 __pycache__
+
+sendappcommands.txt

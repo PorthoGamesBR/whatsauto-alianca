@@ -67,7 +67,10 @@ def process_message(message):
         return ls_pp.get_listona()
     
     elif mes_ls[0] == 'ppnome':
-        pp = ls_pp.get_personagem_by_name(mes_ls[1])
+        nome = mes_ls[1]
+        for string in mes_ls[2:]:
+            nome += " " + string
+        pp = ls_pp.get_personagem_by_name(nome)
         if pp:
             return ls_pp.Personagem.generate_list_str(pp,pp.id)
         else:
