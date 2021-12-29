@@ -6,3 +6,4 @@ venv
 *.vscode
 
 /Dockerfile
+__pycache__

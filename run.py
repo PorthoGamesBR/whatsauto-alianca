@@ -1,4 +1,5 @@
 from flask import Flask, request
+import messageProcessor as processor
 
 app = Flask(__name__)
 
@@ -10,10 +11,10 @@ def whats_test():
     #app=WhatsAuto&sender=WhatsAuto+app&message=Mensagem+de+teste&
     
     #And this one gets an ImmutableDict and prints the message from it
-    print(request.form['message'])
+    awnser_text = processor.process_message(request.form['message'])
     
     #Flask convert dicts automaticaly as Json objects when returning
-    awnser = {'reply': 'Hello Whatsauto'}
+    awnser = {'reply': awnser_text}
     return awnser
 
 
