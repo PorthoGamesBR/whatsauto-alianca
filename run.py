@@ -1,6 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, current_app, send_from_directory
+from flask import send_file as sf
 import messageProcessor as processor
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
@@ -18,6 +20,7 @@ def whats_test():
         awnser_text = processor.process_message(request.form['message'])
         
         #Generate logs of users and their comands
+        #TODO: Change this so it uses a organized database
         with open(log_file_name, "a+") as log_file:
             now = datetime.now()
             dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
@@ -39,21 +42,9 @@ def whats_test():
 #This one is to see the logs via webrowser
 @app.route("/log", methods=['GET'])
 def log_web():
-    to_fill = ""
-    with open(log_file_name, "r") as log_file:
-        for line in log_file.readlines()[1:11]:
-            to_fill += line.replace('\n','<br>')
-    template = f"""
-<html>
-<head>
-<title>Aliança Bot Logs</title>
-</head>
-<body>
-{ to_fill }
-</body>
-</html>
-"""
-    return template
+    #Sends the complete log file 
+    return sf("log.txt")
+
 
 
 if __name__ == "__main__":

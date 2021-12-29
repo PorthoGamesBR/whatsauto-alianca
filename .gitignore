@@ -10,4 +10,5 @@ Devtools
 /Dockerfile
 __pycache__
 
+log.txt
 sendappcommands.txt
