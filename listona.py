@@ -18,7 +18,9 @@ config = {
     'database' : database_name
 } 
 
-
+string_de_up = open('xppornivel.txt','r').readline()
+#Vai do index 0 ao 79
+lista_de_up = string_de_up.split(",")
     
 #Classe personagem, que contem os dados a adicionar na lista   
 class Personagem:
@@ -38,22 +40,22 @@ class Personagem:
             return list_str
         
     def add_xp(self,ammount):
-        lista_de_up ={
-            15 : 19000,
-            16 : 26000,
-            17 : 27000,
-            18 : 28000,
-            19 : 29000,
-            20 : 30000          
-         }
+        origin_lvl = self.nivel
+        #First add xp
         total_xp = self.xp + ammount
-        xp_to_up = lista_de_up[self.nivel]
-        while total_xp > xp_to_up:
-            total_xp -= xp_to_up
-            self.nivel += 1
-            xp_to_up = lista_de_up[self.nivel]
-            
+        #check if PP is at last level. If not, check how much it needs to up
+        if self.nivel < len(lista_de_up):
+            xp_to_up = int(lista_de_up[self.nivel-1])
+            #Loop to up how much xp is needed.
+            while total_xp > xp_to_up:
+                total_xp -= xp_to_up
+                self.nivel += 1
+                if self.nivel > len(lista_de_up):
+                    break
+                xp_to_up = int(lista_de_up[self.nivel-1])
+                
         self.xp = total_xp
+        return str(self.nivel - origin_lvl)
         
     def __repr__(self):
         return f"{self.nome}/{self.nivel}/{self.xp:,} XP/{self.gold:,} G$"
@@ -102,6 +104,7 @@ def add_personagem(pp):
                     print(f'"{pp.nome}" Adicionado com sucesso!')
        except Error as e:
             print(e)
+            return "Erro no servidor. Código 1"
     else:
        print("Não é um personagem, não pode ser adicionado.")
 
@@ -117,11 +120,12 @@ def get_listona():
                 result = cursor.fetchall()
                 print("Listona lida com sucesso!")
                 for row in result:
-                    pp_list += Personagem.generate_list_str(row) + '\n'               
+                    pp_list += Personagem.generate_list_str(row) + '\n'
+                return pp_list                   
     except Error as e:
         print(e)
-        
-    return pp_list
+        return "Erro no servidor. Código 2"
+         
         
 #Função para pegar personagem especifico da lista
 def get_personagem_by_name(pp_name):
@@ -143,13 +147,15 @@ def get_personagem_by_name(pp_name):
                 if result:
                     print(Personagem.generate_list_str(result))               
                     pp = Personagem(result[1],result[2],result[3],result[4],result[0])
+                    return pp
                 else:
-                    pp = ""   
-                cursor.fetchall()            
+                    cursor.fetchall()
+                    return "Personagem nao encontrado"          
     except Error as e:
         print(e)
+        return "Erro no servidor. Código 3"
         
-    return pp
+    
         
 #Função para pegar personagem especifico da lista pelo número
 def get_personagem_by_id(pp_id):
@@ -170,12 +176,15 @@ def get_personagem_by_id(pp_id):
                 #print(Personagem.generate_list_str(result))
                 if result:                
                     pp = Personagem(result[1],result[2],result[3],result[4],result[0])
+                    return pp
                 else:
-                    pp = ""
-                cursor.fetchall()            
+                    cursor.fetchall()
+                    return "Personagem nao encontrado"
+                            
     except Error as e:
         print(e)   
-    return pp
+        return "Erro no servidor. Código 4"
+    
 
 #Mudar alguma coisa em um personagem da listona
 def change_pp_listona(pp_id, pp_char, value):
@@ -220,6 +229,7 @@ def change_pp_listona(pp_id, pp_char, value):
                     return "Erro: personagem não encontrado"                             
     except Error as e:
         print(e)
+        return "Erro no servidor. Código 5"
 
 #Limpar tabela inteira (Para carregar a listona de uma vez só)
 def clear_table():
@@ -234,6 +244,7 @@ def clear_table():
                     print("Tabela limpa com sucesso!")             
         except Error as e:
             print(e)
+            return "Erro no servidor. Código 6"
  
 def add_gold_pp(pp_id, value):
     add_value_query = f"""
@@ -263,11 +274,12 @@ def add_gold_pp(pp_id, value):
                             pp = ""
                         cursor.fetchall() 
                 connection.commit()          
-             
+                return pp
     except Error as e:
         print(e)
+        return "Erro no servidor. Código 7"
     
-    return pp
+    
 
 def add_xp_pp(pp_id, value):
     select_personagens_query = f"""
@@ -287,7 +299,6 @@ def add_xp_pp(pp_id, value):
     WHERE
         id = %s
     """
-
     try:
         with connect(**config) as connection:
             with connection.cursor(buffered = True) as cursor:
@@ -295,7 +306,7 @@ def add_xp_pp(pp_id, value):
                 result = cursor.fetchone()
                 if result:             
                     pp = Personagem(result[1],result[2],result[3],result[4],result[0])
-                    pp.add_xp(value)
+                    lvls_upped = pp.add_xp(value)
                     cursor.fetchall()
                 else:
                     cursor.fetchall()
@@ -305,8 +316,10 @@ def add_xp_pp(pp_id, value):
                 change_tuple = (str(pp.nivel), str(pp.xp),str(pp_id))
                 cursor.execute(change_pp_query,change_tuple)
                 connection.commit()             
-                              
+                return (pp,"Seu personagem upou : " + lvls_upped)                
     except Error as e:
         print(e)
-    return pp  
+        return "Erro no servidor. Código 8"
+        
+    
     

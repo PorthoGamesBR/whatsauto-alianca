@@ -44,7 +44,8 @@ def process_message(message):
     mes = message.strip('!')
     mes_ls = mes.split(' ')
     mes_ls[0] = mes_ls[0].lower()
-    
+    #TOFIX: Check if two arguments exist in messages that need more than 1 argument
+        
     if mes_ls[0] == 'chaos_hab':
         return chaos.read_hab('r')  
     
@@ -67,59 +68,85 @@ def process_message(message):
         return ls_pp.get_listona()
     
     elif mes_ls[0] == 'ppnome':
-        nome = mes_ls[1]
-        for string in mes_ls[2:]:
-            nome += " " + string
-        pp = ls_pp.get_personagem_by_name(nome)
-        if pp:
-            return ls_pp.Personagem.generate_list_str(pp,pp.id)
+        if len(mes_ls) > 1:
+            nome = mes_ls[1]
+            for string in mes_ls[2:]:
+                nome += " " + string
+            pp = ls_pp.get_personagem_by_name(nome)
+            if pp:
+                if isinstance(pp, ls_pp.Personagem):
+                    return ls_pp.Personagem.generate_list_str(pp,pp.id)
+                else:
+                    return pp
+            else:
+                return "ERRO: Personagem não encontrado"
         else:
-            return "ERRO: Personagem não encontrado"
+            return "ERRO: Faltam os seguintes argumentos: Nome do Personagem"
         
     elif mes_ls[0] == 'ppnum':
-        try:
-            pp_id = int(mes_ls[1])
-        except ValueError:
-            return "ERRO: Valor não numérico inserido no argumento 1: " + mes_ls[1]
-        pp = ls_pp.get_personagem_by_id(pp_id=pp_id)
-        if pp:
-            return ls_pp.Personagem.generate_list_str(pp,pp.id)
+        if len(mes_ls) > 1:
+            try:
+                pp_id = int(mes_ls[1])
+            except ValueError:
+                return "ERRO: Valor não numérico inserido no argumento 1: " + mes_ls[1]
+            pp = ls_pp.get_personagem_by_id(pp_id=pp_id)
+            if pp:
+                if isinstance(pp, ls_pp.Personagem):
+                    return ls_pp.Personagem.generate_list_str(pp,pp.id)
+                else:
+                    return pp
+            else:
+                return "ERRO: Personagem não encontrado"
         else:
-            return "ERRO: Personagem não encontrado"
+            return "ERRO: Faltam os seguintes argumentos: ID do Personagem"
     
     elif mes_ls[0] == 'addgs':
-        try:
-            pp_id = int(mes_ls[1])
-        except ValueError:
-            return "ERRO: Valor não numérico inserido no argumento 1: " + mes_ls[1]
-        try:
-            gold_add = int(mes_ls[2])
-        except ValueError:
-            return "ERRO: Valor não numérico inserido no argumento 2: " + mes_ls[2]
-        
-        pp = ls_pp.add_gold_pp(pp_id=pp_id,value=gold_add)
-        if pp:
-            return ls_pp.Personagem.generate_list_str(pp,pp.id)
+        if len(mes_ls) > 2:
+            try:
+                pp_id = int(mes_ls[1])
+            except ValueError:
+                return "ERRO: Valor não numérico inserido no argumento 1: " + mes_ls[1]
+            try:
+                gold_add = int(mes_ls[2])
+            except ValueError:
+                return "ERRO: Valor não numérico inserido no argumento 2: " + mes_ls[2]
+            
+            pp = ls_pp.add_gold_pp(pp_id=pp_id,value=gold_add)
+            if pp:
+                if isinstance(pp, ls_pp.Personagem):
+                    return ls_pp.Personagem.generate_list_str(pp,pp.id)
+                else:
+                    return pp
+            else:
+                return "ERRO: Personagem não encontrado"
         else:
-            return "ERRO: Personagem não encontrado"
+            return "ERRO: Menos argumentos do que esperado. São necessários: ID Do personagem, Quantidade de G$"
         
     elif mes_ls[0] == 'addxp':
-        try:
-            pp_id = int(mes_ls[1])
-        except ValueError:
-            return "ERRO: Valor não numérico inserido no argumento 1: " + mes_ls[1]
-        try:
-            xp_add = int(mes_ls[2])
-        except ValueError:
-            return "ERRO: Valor não numérico inserido no argumento 2: " + mes_ls[2]
-        
-        pp = ls_pp.add_xp_pp(pp_id=pp_id,value=xp_add)
-        if pp:
-            return ls_pp.Personagem.generate_list_str(pp,pp.id)
+        if len(mes_ls) > 2:
+            try:
+                pp_id = int(mes_ls[1])
+            except ValueError:
+                return "ERRO: Valor não numérico inserido no argumento 1: " + mes_ls[1]
+            try:
+                xp_add = int(mes_ls[2])
+            except ValueError:
+                return "ERRO: Valor não numérico inserido no argumento 2: " + mes_ls[2]
+            
+            addxp_list = ls_pp.add_xp_pp(pp_id=pp_id,value=xp_add)
+            if addxp_list:
+                if isinstance(addxp_list[0], ls_pp.Personagem):
+                    return ls_pp.Personagem.generate_list_str(addxp_list[0],addxp_list[0].id) + "\n" + addxp_list[1]
+                else:
+                    return addxp_list
+            else:
+                return "ERRO: Personagem não encontrado"
         else:
-            return "ERRO: Personagem não encontrado"
+             return "ERRO: Menos argumentos do que esperado. São necessários: ID Do personagem, Quantidade de XP"
     
     elif mes_ls[0] == 'setpp':
+        #PARA USO APENAS DA ADMNISTRAÇÂO DIRETAMENTE PELO CONSOLE.
+        #NÃO DEVE SER ADICIONADO COMO COMANDO
         try:
             pp_id = int(mes_ls[1])
         except ValueError:
@@ -133,24 +160,33 @@ def process_message(message):
                                      value=xp_add,
                                      pp_char=mes_ls[2])
         if pp:
-            return ls_pp.Personagem.generate_list_str(pp,pp.id)
+            if isinstance(pp, ls_pp.Personagem):
+                return ls_pp.Personagem.generate_list_str(pp,pp.id)
+            else:
+                return pp
         else:
             return "ERRO: Personagem não encontrado"
     
     elif mes_ls[0] == 'newpp':
-        nome = ""
-        for i in mes_ls[1:]:
-            nome += f"{i} "
-        nome = nome.lstrip(' ')
-        nome = nome.rstrip(' ')
+        if len(mes_ls) > 1:
+            nome = ""
+            for i in mes_ls[1:]:
+                nome += f"{i} "
+            nome = nome.lstrip(' ')
+            nome = nome.rstrip(' ')
+                
+            ls_pp.add_personagem(ls_pp.Personagem(nome=nome))
             
-        ls_pp.add_personagem(ls_pp.Personagem(nome=nome))
-        
-        pp = ls_pp.get_personagem_by_name(nome)
-        if pp:
-            return ls_pp.Personagem.generate_list_str(pp,pp.id)
-        else:
-            return "Personagem não foi criado."
+            pp = ls_pp.get_personagem_by_name(nome)
+            if pp:
+                if isinstance(pp, ls_pp.Personagem):
+                    return ls_pp.Personagem.generate_list_str(pp,pp.id)
+                else:
+                    return pp
+            else:
+                return "Personagem não foi criado."
+        else: 
+            return "ERRO: Faltam os seguintes argumentos: Nome do Personagem"
 
 if __name__ == '__main__':
     main()
